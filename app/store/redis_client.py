@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+print(os.getenv("REDIS_HOST"))
 # Redis connection setup
 redis_client = redis.StrictRedis(host=os.getenv("REDIS_HOST"), port=os.getenv("REDIS_PORT"), db=0)
 
