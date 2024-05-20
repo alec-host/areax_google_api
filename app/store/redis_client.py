@@ -1,15 +1,18 @@
 import redis
+import os
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Redis connection setup
-redis_client = redis.StrictRedis(host='127.0.0.1', port=6379, db=0)
+redis_client = redis.StrictRedis(host=os.getenv("REDIS_HOST"), port=os.getenv("REDIS_PORT"), db=0)
 
-REDIS_TOKEN_KEY = 'gmail_token'
-
-def store_token_in_redis(token_data):
+def store_token_in_redis(token_data,REDIS_TOKEN_KEY):
     """Store token data in Redis."""
     redis_client.set(REDIS_TOKEN_KEY, token_data)
 
-def retrieve_token_from_redis():
+def retrieve_token_from_redis(REDIS_TOKEN_KEY):
     """Retrieve token data from Redis."""
     token_data = redis_client.get(REDIS_TOKEN_KEY)
     if token_data:

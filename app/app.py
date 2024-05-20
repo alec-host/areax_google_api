@@ -16,6 +16,10 @@ app.add_middleware(
     allow_headers=allow_headers,
 )
 
+@app.get('/callback')
+async def callback():
+    return {"successs":True,"error":False,"message":"Success"}
+
 @app.post('/authorize')
 async def authorize(user_information: UserInformation):
     if(len(user_information.email) == 0):
@@ -24,7 +28,7 @@ async def authorize(user_information: UserInformation):
         return {"successs":False,"error":True,"message":"Reference_number must be provided."}
     else:
         if(is_valid_email(user_information.email)):
-            service = authenticate_gmail_api()
+            service = authenticate_gmail_api(user_information.email)
             if(service is not None):
                 return {"successs":True,"error":False,"message":"Authorization was successful."}
             else:
@@ -34,20 +38,22 @@ async def authorize(user_information: UserInformation):
     
 @app.post('/fetch_emails')
 async def fetch_emails(email_search: EmailSearch):
-    service = authenticate_gmail_api()
-    if(service is not None):
-        messages = await search_emails(service, email_search.search_words, "")
-        emails = [ await get_email_body(service, message['id']) for message in messages]
-        if(len(emails) == 0):
-            return []
+    if(is_valid_email(email_search.email)):
+        if(len(email_search.search_words) > 0):
+            service = authenticate_gmail_api(email_search.email)
+            if(service is not None):
+                messages = await search_emails(service, email_search.search_words, "")
+                searched_emails = [ await get_email_body(service, message['id']) for message in messages]
+                if(len(searched_emails) == 0):
+                    return []
+                else:
+                    return (searched_emails)
+            else:
+                return {"successs":True,"error":False,"message":"No credentials provided."}
         else:
-            return (emails)
+            return {"successs":False,"error":True,"message":"Search keyword has to be provided."}
     else:
-        return {"successs":True,"error":False,"message":"No credentials provided."}
-      
-@app.get('/callback')
-async def callback():
-    return {"successs":True,"error":False,"message":"Success"}
+        return {"successs":False,"error":True,"message":"Invalid email."}
 
 if __name__ == '__main__':
     try:

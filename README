@@ -17,6 +17,7 @@ my_project/
 ├── requirements.txt # Python dependencies
 ├── docker-compose.yml # Docker Compose file for multi-container setup
 ├── Dockerfile # Dockerfile for building the application image
+├── .env
 └── .gitignore # Git ignore file
 
 ## Prerequisites
