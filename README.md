@@ -10,6 +10,7 @@ This project is a Python application built using FastAPI and Redis. It provides 
 
 ## Project Structure
 
+```bash
 my_project/
 ├── redis_client.py # Handles Redis interactions
 ├── gmail_auth.py # Manages Gmail API authentication
@@ -19,6 +20,7 @@ my_project/
 ├── Dockerfile # Dockerfile for building the application image
 ├── .env
 └── .gitignore # Git ignore file
+```
 
 ## Prerequisites
 
